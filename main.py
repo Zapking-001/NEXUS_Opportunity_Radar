@@ -1,15 +1,20 @@
 import os
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
+from langchain_openai import ChatOpenAI # Add this import
 from data_layer import fetch_market_anomaly
 
 # 1. UNIVERSAL CONFIGURATION
 load_dotenv()
-os.environ["OPENAI_API_BASE"] = "https://api.groq.com/openai/v1"
-os.environ["OPENAI_API_KEY"] = os.getenv("GROQ_API_KEY")
 
-# FLAGSHIP MODEL: llama-3.3-70b-versatile
-os.environ["OPENAI_MODEL_NAME"] = "llama-3.3-70b-versatile"
+# Define the Groq LLM explicitly
+# This prevents the library from looking for a default OpenAI organization
+groq_llm = ChatOpenAI(
+    openai_api_base="https://api.groq.com/openai/v1",
+    openai_api_key=os.getenv("GROQ_API_KEY"),
+    model_name="llama-3.3-70b-versatile"
+)
+
 os.environ["CREWAI_TRACING_ENABLED"] = "false"
 
 # 2. AGENT DEFINITIONS
@@ -17,20 +22,20 @@ quant_analyst = Agent(
     role='Lead Quant Researcher',
     goal='Identify if mathematical anomalies represent a high-probability breakout.',
     backstory="""Expert in statistical arbitrage and volatility modeling. 
-    Specializes in interpreting Volume Z-Scores and SMA deviations to identify 
-    non-random market movements.""",
+    Specializes in interpreting Volume Z-Scores and SMA deviations.""",
     verbose=True,
-    allow_delegation=False
+    allow_delegation=False,
+    llm=groq_llm  # <--- EXPLICITLY PASS THE LLM HERE
 )
 
 strategist = Agent(
     role='Indian Market Strategist',
     goal='Translate technical signals into actionable advice for retail investors.',
     backstory="""Veteran of the Indian equity markets with deep knowledge of 
-    NSE liquidity cycles. Expert at synthesizing quant data into risk-managed 
-    investment narratives.""",
+    NSE liquidity cycles. Expert at synthesizing quant data.""",
     verbose=True,
-    allow_delegation=False
+    allow_delegation=False,
+    llm=groq_llm  # <--- EXPLICITLY PASS THE LLM HERE
 )
 
 # 3. LIVE DATA INGESTION

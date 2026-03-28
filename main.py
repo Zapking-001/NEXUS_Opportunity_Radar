@@ -23,7 +23,8 @@ quant_analyst = Agent(
     goal='Identify if mathematical anomalies represent a high-probability breakout.',
     backstory="""Expert in statistical arbitrage and volatility modeling. 
     Specializes in interpreting Volume Z-Scores and SMA deviations.""",
-    llm=groq_llm, # type: ignore
+    llm=groq_llm, 
+    function_calling_llm=groq_llm,
     verbose=True,
     allow_delegation=False
 )

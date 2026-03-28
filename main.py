@@ -23,9 +23,9 @@ quant_analyst = Agent(
     goal='Identify if mathematical anomalies represent a high-probability breakout.',
     backstory="""Expert in statistical arbitrage and volatility modeling. 
     Specializes in interpreting Volume Z-Scores and SMA deviations.""",
+    llm=groq_llm, # type: ignore
     verbose=True,
-    allow_delegation=False,
-    llm=groq_llm  # <--- EXPLICITLY PASS THE LLM HERE
+    allow_delegation=False
 )
 
 strategist = Agent(
@@ -35,7 +35,9 @@ strategist = Agent(
     NSE liquidity cycles. Expert at synthesizing quant data.""",
     verbose=True,
     allow_delegation=False,
-    llm=groq_llm  # <--- EXPLICITLY PASS THE LLM HERE
+    llm=groq_llm, 
+    # This ensures the internal CrewAI logic uses the LangChain binding
+    function_calling_llm=groq_llm
 )
 
 # 3. LIVE DATA INGESTION

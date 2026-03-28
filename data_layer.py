@@ -1,6 +1,6 @@
-import yfinance as yf
-import pandas as pd
-import numpy as np
+import yfinance as yf                                                                                                                                                                                                               # type: ignore
+import pandas as pd                                                                                                                                                                                                                # type: ignore
+import numpy as np                                                                                                                                                                                                                # type: ignore
 
 def fetch_market_anomaly(ticker_symbol):
     """
@@ -40,3 +40,4 @@ def fetch_market_anomaly(ticker_symbol):
 if __name__ == "__main__":
     # Quick test for Reliance
     print(fetch_market_anomaly("RELIANCE"))
+
